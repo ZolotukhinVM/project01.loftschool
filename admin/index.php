@@ -8,6 +8,7 @@ foreach ($arUsers as $value) {
 }
 echo "<h3>Orders:</h3>";
 $resOrders = $dbConnect->query("SELECT * FROM `orders_tbl` order by `id` DESC");
+//todo fetchAll change for on fetch?
 $arOrders = $resOrders->fetchAll(PDO::FETCH_ASSOC);
 foreach ($arOrders as $value) {
     echo implode(" | ", $value) . "<br>";
