@@ -6,7 +6,6 @@ try {
     $sqlUsers = "SELECT `id` FROM `users_tbl` WHERE `email` = '" . $email . "'";
     $resUsers = $dbConnect->query($sqlUsers);
     if ($resUsers->rowCount() == 0) {
-        $userNew = "Y";
         $sqlInsertUser = "INSERT INTO `users_tbl` (`name`, `phone`, `email`) VALUES (?, ?, ?)";
         $insertUser = $dbConnect->prepare($sqlInsertUser);
         $insertUser->bindParam(1, $name);
