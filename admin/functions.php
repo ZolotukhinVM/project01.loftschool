@@ -27,9 +27,10 @@ function insertOrder(array $arrPost, $userId, PDO $dbConnect)
     $insertOrder->execute();
 }
 
-function putFileOrder($orderId, $userId, PDO $dbConnect)
+function putFileOrder($userId, PDO $dbConnect)
 {
-    $nameOrderFile = "orderid_" . $orderId . ".txt";
+    $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId. "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
+    $nameOrderFile = "orderid_" . $orderLastId["id"] . ".txt";
     $textOrder = "Ваш заказ будет доставлен по адресу: " . getAddress($_POST) . "\n";
     $textOrder .= "DarkBeefBurger за 500 рублей, 1 шт. \n";
     $countOrders = $dbConnect->query("SELECT COUNT(*) as count FROM `orders_tbl` WHERE `id_user` = '" . $userId . "'")->fetch(PDO::FETCH_ASSOC);
