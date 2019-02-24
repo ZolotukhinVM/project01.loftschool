@@ -1,4 +1,13 @@
 <?php
+function getUserId($mail, PDO $dbConnect)
+{
+    $sqlUser = "SELECT `id` FROM `users_tbl` WHERE `email` = '" . $mail . "'";
+    $resUser = $dbConnect->query($sqlUser);
+    $rowCount = $resUser->rowCount();
+    $arUser = $resUser->fetch(PDO::FETCH_ASSOC);
+    return ($rowCount == 0) ? $rowCount : $arUser ["id"];
+}
+
 function insertUser(array $arrPost, PDO $dbConnect)
 {
     $sqlInsertUser = "INSERT INTO `users_tbl` (`name`, `phone`, `email`) VALUES (?, ?, ?)";
@@ -29,7 +38,7 @@ function insertOrder(array $arrPost, $userId, PDO $dbConnect)
 
 function putFileOrder($userId, PDO $dbConnect)
 {
-    $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId. "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
+    $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId . "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
     $nameOrderFile = "orderid_" . $orderLastId["id"] . ".txt";
     $textOrder = "Ваш заказ будет доставлен по адресу: " . getAddress($_POST) . "\n";
     $textOrder .= "DarkBeefBurger за 500 рублей, 1 шт. \n";
