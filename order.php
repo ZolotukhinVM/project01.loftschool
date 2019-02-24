@@ -16,11 +16,8 @@ try {
         $phone = $_POST["phone"];
         $email = $_POST["email"];
         $resUser = $insertUser->execute();
-        $userNewId = $dbConnect->query($sqlUsers)->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $userNew = "N";
-        $user = $resUsers->fetch(PDO::FETCH_ASSOC);
     }
+    $userId = $dbConnect->query($sqlUsers)->fetch(PDO::FETCH_ASSOC);
     $sqlInsertOrder = "INSERT INTO `orders_tbl` (`id_user`, `address`, `comment`, `pay`, `callback`) VALUES (?, ?, ?, ?, ?)";
     $insertOrder = $dbConnect->prepare($sqlInsertOrder);
     $insertOrder->bindParam(1, $userId, PDO::PARAM_INT);
@@ -28,7 +25,7 @@ try {
     $insertOrder->bindParam(3, $comment);
     $insertOrder->bindParam(4, $pay);
     $insertOrder->bindParam(5, $callback);
-    $userId = ($userNew == "Y") ? $userNewId["id"] : $user["id"];
+//    $userId = ($userNew == "Y") ? $userNewId["id"] : $user["id"];
     $address = $_POST["street"] . " / " . $_POST["home"] . " / " . $_POST["part"] . " / " . $_POST["appt"] . " / " . $_POST["floor"];
     $comment = $_POST["comment"];
     $pay = $_POST["pay"];
