@@ -1,7 +1,7 @@
 <?php
-function getUserId($mail, PDO $dbConnect)
+function getUserId(string $mail, PDO $dbConnect): int
 {
-    $sqlUser = "SELECT `id` FROM `users_tbl` WHERE `email` = '" . $mail . "'";
+    $sqlUser = "SELECT `id` FROM `users_tbl` WHERE `email` = '$mail'";
     $resUser = $dbConnect->query($sqlUser);
     $rowCount = $resUser->rowCount();
     $arUser = $resUser->fetch(PDO::FETCH_ASSOC);
@@ -15,12 +15,12 @@ function insertUser(array $arrPost, PDO $dbConnect)
     $insertUser->execute(['name' => $arrPost['name'], 'phone' => $arrPost['phone'], 'email' => $arrPost['email']]);
 }
 
-function getAddress($arrPost)
+function getAddress(array $arrPost): string
 {
     return $arrPost["street"] . " / " . $arrPost["home"] . " / " . $arrPost["part"] . " / " . $arrPost["appt"] . " / " . $arrPost["floor"];
 }
 
-function insertOrder(array $arrPost, $userId, PDO $dbConnect)
+function insertOrder(array $arrPost, int $userId, PDO $dbConnect)
 {
     $callback = (isset($arrPost["callback"])) ? "N" : "Y";
     $sqlInsertOrder = "INSERT INTO `orders_tbl` (`id_user`, `address`, `comment`, `pay`, `callback`) VALUES (?, ?, ?, ?, ?)";
@@ -33,7 +33,7 @@ function insertOrder(array $arrPost, $userId, PDO $dbConnect)
     $insertOrder->execute();
 }
 
-function putFileOrder($userId, PDO $dbConnect)
+function putFileOrder(int $userId, PDO $dbConnect)
 {
     $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId . "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
     $countOrders = $dbConnect->query("SELECT COUNT(*) FROM `orders_tbl` WHERE `id_user` = $userId")->fetchColumn();
