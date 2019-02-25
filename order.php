@@ -6,7 +6,7 @@ try {
     if (getUserId($_POST["email"], $dbConnect) == 0) {
         insertUser($_POST, $dbConnect);
     }
-    $userId = getUserId($_POST["mail"], $dbConnect);
+    $userId = getUserId($_POST["email"], $dbConnect);
     insertOrder($_POST, $userId, $dbConnect);
     $dbConnect->commit();
 } catch (Exception $e) {

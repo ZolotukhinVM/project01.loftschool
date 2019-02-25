@@ -10,12 +10,9 @@ function getUserId($mail, PDO $dbConnect)
 
 function insertUser(array $arrPost, PDO $dbConnect)
 {
-    $sqlInsertUser = "INSERT INTO `users_tbl` (`name`, `phone`, `email`) VALUES (?, ?, ?)";
+    $sqlInsertUser = "INSERT INTO `users_tbl` (`name`, `phone`, `email`) VALUES (:name, :phone, :email)";
     $insertUser = $dbConnect->prepare($sqlInsertUser);
-    $insertUser->bindParam(1, $arrPost["name"]);
-    $insertUser->bindParam(2, $arrPost["phone"]);
-    $insertUser->bindParam(3, $arrPost["email"]);
-    $insertUser->execute();
+    $insertUser->execute(['name' => $arrPost['name'], 'phone' => $arrPost['phone'], 'email' => $arrPost['email']]);
 }
 
 function getAddress($arrPost)
@@ -39,10 +36,10 @@ function insertOrder(array $arrPost, $userId, PDO $dbConnect)
 function putFileOrder($userId, PDO $dbConnect)
 {
     $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId . "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
+    $countOrders = $dbConnect->query("SELECT COUNT(*) FROM `orders_tbl` WHERE `id_user` = $userId")->fetchColumn();
     $nameOrderFile = "orderid_" . $orderLastId["id"] . ".txt";
     $textOrder = "Ваш заказ будет доставлен по адресу: " . getAddress($_POST) . "\n";
     $textOrder .= "DarkBeefBurger за 500 рублей, 1 шт. \n";
-    $countOrders = $dbConnect->query("SELECT COUNT(*) as count FROM `orders_tbl` WHERE `id_user` = '" . $userId . "'")->fetch(PDO::FETCH_ASSOC);
-    $textOrder .= "Спасибо - это ваш " . $countOrders["count"] . " заказ";
+    $textOrder .= "Спасибо - это ваш " . $countOrders . " заказ";
     file_put_contents("./orders/" . $nameOrderFile, $textOrder);
 }
