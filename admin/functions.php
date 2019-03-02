@@ -33,13 +33,49 @@ function insertOrder(array $arrPost, int $userId, PDO $dbConnect)
     $insertOrder->execute();
 }
 
-function putFileOrder(int $userId, PDO $dbConnect)
+function getTextOrder(int $userId, PDO $dbConnect): string
 {
-    $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId . "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
     $countOrders = $dbConnect->query("SELECT COUNT(*) FROM `orders_tbl` WHERE `id_user` = $userId")->fetchColumn();
-    $nameOrderFile = "orderid_" . $orderLastId["id"] . ".txt";
     $textOrder = "Ваш заказ будет доставлен по адресу: " . getAddress($_POST) . "\n";
     $textOrder .= "DarkBeefBurger за 500 рублей, 1 шт. \n";
     $textOrder .= "Спасибо - это ваш " . $countOrders . " заказ";
+    return $textOrder;
+}
+
+function putFileOrder(int $userId, string $textOrder, PDO $dbConnect)
+{
+    $orderLastId = $dbConnect->query("SELECT `id` FROM orders_tbl WHERE `id_user` = '" . $userId . "' ORDER BY `id` DESC")->fetch(PDO::FETCH_ASSOC);
+    $nameOrderFile = "orderid_" . $orderLastId["id"] . ".txt";
     file_put_contents("./orders/" . $nameOrderFile, $textOrder);
+}
+
+function sendMail(string $email, string $textOrder)
+{
+    $transport = (new Swift_SmtpTransport('smtp.yandex.ru', 465, 'ssl'))
+        ->setUsername('zolotukhinvm@ya.ru')
+        ->setPassword('*********');
+    $mailer = new Swift_Mailer($transport);
+    $message = (new Swift_Message('New order'))
+        ->setFrom(['ZolotukhinVM@ya.ru' => 'ZolotukhinVM'])
+        ->setTo([$email])
+        ->setBody($textOrder);
+    $result = $mailer->send($message);
+}
+
+function getUsers(PDO $dbConnect)
+{
+    $resUsers = $dbConnect->query("SELECT * FROM `users_tbl` order by `id` DESC");
+    while ($row = $resUsers->fetchObject()) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function getOrders(PDO $dbConnect)
+{
+    $resOrders = $dbConnect->query("SELECT * FROM `orders_tbl` order by `id` DESC");
+    while ($row = $resOrders->fetchObject()) {
+        $data[] = $row;
+    }
+    return $data;
 }

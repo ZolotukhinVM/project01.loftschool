@@ -1,6 +1,7 @@
 <?php
 require "dbconnect.php";
 require "./admin/functions.php";
+require "./vendor/autoload.php";
 try {
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     if (!$email) {
@@ -21,5 +22,7 @@ try {
     echo "Error: " . $e->getMessage();
     die();
 }
-putFileOrder($userId, $dbConnect);
+putFileOrder($userId, getTextOrder($userId, $dbConnect), $dbConnect);
+sendMail($email, getTextOrder($userId, $dbConnect));
+
 echo "<h1>Your order is submited! Please wait!</h1>";

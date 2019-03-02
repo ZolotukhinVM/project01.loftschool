@@ -1,14 +1,15 @@
 <?php
-require '../dbconnect.php';
-echo "<h3>Users:</h3>";
-$resUsers = $dbConnect->query("SELECT * FROM `users_tbl` order by `id` DESC");
-$arUsers = $resUsers->fetchAll(PDO::FETCH_ASSOC);
-foreach ($arUsers as $value) {
-    echo implode(" | ", $value) . "<br>";
-}
-echo "<h3>Orders:</h3>";
-$resOrders = $dbConnect->query("SELECT * FROM `orders_tbl` order by `id` DESC");
-$arOrders = $resOrders->fetchAll(PDO::FETCH_ASSOC);
-foreach ($arOrders as $value) {
-    echo implode(" | ", $value) . "<br>";
-}
+
+require_once "functions.php";
+require_once "../dbconnect.php";
+require_once "../vendor/autoload.php";
+
+$loader = new Twig\Loader\FilesystemLoader("templates");
+$twig = new Twig\Environment($loader);
+$template = $twig->loadTemplate("admin.html");
+echo $template->render([
+    "header1" => "Users",
+    "users" => getUsers($dbConnect),
+    "header2" => "Orders",
+    "orders" => getOrders($dbConnect)
+]);

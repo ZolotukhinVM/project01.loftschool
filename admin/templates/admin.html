@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration</title>
+</head>
+<body>
+
+<h2>{{ header1 }}</h2>
+
+<table border="1" cellpadding="5">
+    <tr class="heading">
+        <td>Id</td>
+        <td>Name</td>
+        <td>Email</td>
+    </tr>
+    {% for d in users %}
+    <tr>
+        <td>{{ d.id|escape }}</td>
+        <td>{{ d.name|escape }}</td>
+        <td><a href="mailto:{{ d.email|escape }}">{{ d.email|escape }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>{{ header2 }}</h2>
+<table border="1" cellpadding="5">
+    <tr class="heading">
+        <td>Id order</td>
+        <td>Id user</td>
+        <td>Address</td>
+        <td>Comment</td>
+        <td>Pay</td>
+        <td>Callback</td>
+        <td>Date</td>
+    </tr>
+    {% for d in orders %}
+    <tr>
+        <td>{{ d.id|escape }}</td>
+        <td>{{ d.id_user|escape }}</td>
+        <td>{{ d.address|escape }}</td>
+        <td>{{ d.comment|escape }}</td>
+        <td>{{ d.pay|escape }}</td>
+        <td>{{ d.callback|escape }}</td>
+        <td>{{ d.orderdate|escape }}</td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
