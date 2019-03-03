@@ -59,23 +59,15 @@ function sendMail(string $email, string $textOrder)
         ->setFrom(['ZolotukhinVM@ya.ru' => 'ZolotukhinVM'])
         ->setTo([$email])
         ->setBody($textOrder);
-    $result = $mailer->send($message);
+    $mailer->send($message);
 }
 
-function getUsers(PDO $dbConnect)
+function getUsers(PDO $dbConnect): array
 {
-    $resUsers = $dbConnect->query("SELECT * FROM `users_tbl` order by `id` DESC");
-    while ($row = $resUsers->fetchObject()) {
-        $data[] = $row;
-    }
-    return $data;
+    return $dbConnect->query("SELECT * FROM `users_tbl` order by `id` DESC")->fetchAll();
 }
 
-function getOrders(PDO $dbConnect)
+function getOrders(PDO $dbConnect): array
 {
-    $resOrders = $dbConnect->query("SELECT * FROM `orders_tbl` order by `id` DESC");
-    while ($row = $resOrders->fetchObject()) {
-        $data[] = $row;
-    }
-    return $data;
+    return $dbConnect->query("SELECT * FROM `orders_tbl` order by `id` DESC")->fetchAll();
 }

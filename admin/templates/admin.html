@@ -5,24 +5,21 @@
     <title>Administration</title>
 </head>
 <body>
-
 <h2>{{ header1 }}</h2>
-
 <table border="1" cellpadding="5">
     <tr class="heading">
         <td>Id</td>
         <td>Name</td>
         <td>Email</td>
     </tr>
-    {% for d in users %}
+    {% for user in users %}
     <tr>
-        <td>{{ d.id|escape }}</td>
-        <td>{{ d.name|escape }}</td>
-        <td><a href="mailto:{{ d.email|escape }}">{{ d.email|escape }}</a></td>
+        <td>{{ user.id|e }}</td>
+        <td>{{ user.name|e }}</td>
+        <td><a href="mailto:{{ user.email|escape }}">{{ user.email|e }}</a></td>
     </tr>
     {% endfor %}
 </table>
-
 <h2>{{ header2 }}</h2>
 <table border="1" cellpadding="5">
     <tr class="heading">
@@ -34,19 +31,17 @@
         <td>Callback</td>
         <td>Date</td>
     </tr>
-    {% for d in orders %}
+    {% for order in orders %}
     <tr>
-        <td>{{ d.id|escape }}</td>
-        <td>{{ d.id_user|escape }}</td>
-        <td>{{ d.address|escape }}</td>
-        <td>{{ d.comment|escape }}</td>
-        <td>{{ d.pay|escape }}</td>
-        <td>{{ d.callback|escape }}</td>
-        <td>{{ d.orderdate|escape }}</td>
-
+        <td>{{ order.id|e }}</td>
+        <td>{{ order.id_user|e }}</td>
+        <td>{{ order.address|e }}</td>
+        <td>{{ order.comment|e }}</td>
+        <td>{{ order.pay|e }}</td>
+        <td>{{ order.callback|e }}</td>
+        <td>{{ order.orderdate|e }}</td>
     </tr>
     {% endfor %}
 </table>
-
 </body>
 </html>
