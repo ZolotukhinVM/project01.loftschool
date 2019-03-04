@@ -17,7 +17,14 @@ function insertUser(array $arrPost, PDO $dbConnect)
 
 function getAddress(array $arrPost): string
 {
-    return $arrPost["street"] . " / " . $arrPost["home"] . " / " . $arrPost["part"] . " / " . $arrPost["appt"] . " / " . $arrPost["floor"];
+    $arrAddress = [
+        $arrPost["street"],
+        $arrPost["home"],
+        $arrPost["part"],
+        $arrPost["appt"],
+        $arrPost["floor"]
+    ];
+    return implode(" / ", $arrAddress);
 }
 
 function insertOrder(array $arrPost, int $userId, PDO $dbConnect)
@@ -33,12 +40,15 @@ function insertOrder(array $arrPost, int $userId, PDO $dbConnect)
     $insertOrder->execute();
 }
 
-function getTextOrder(int $userId, PDO $dbConnect): string
+function getCountOrders ($userId, PDO $dbConnect) {
+    return $dbConnect->query("SELECT COUNT(*) FROM `orders_tbl` WHERE `id_user` = $userId")->fetchColumn();
+}
+
+function getTextOrder($userId, $dbConnect): string
 {
-    $countOrders = $dbConnect->query("SELECT COUNT(*) FROM `orders_tbl` WHERE `id_user` = $userId")->fetchColumn();
     $textOrder = "Ваш заказ будет доставлен по адресу: " . getAddress($_POST) . "\n";
     $textOrder .= "DarkBeefBurger за 500 рублей, 1 шт. \n";
-    $textOrder .= "Спасибо - это ваш " . $countOrders . " заказ";
+    $textOrder .= "Спасибо - это ваш " . getCountOrders($userId, $dbConnect) . " заказ";
     return $textOrder;
 }
 
@@ -52,8 +62,8 @@ function putFileOrder(int $userId, string $textOrder, PDO $dbConnect)
 function sendMail(string $email, string $textOrder)
 {
     $transport = (new Swift_SmtpTransport('smtp.yandex.ru', 465, 'ssl'))
-        ->setUsername('zolotukhinvm@ya.ru')
-        ->setPassword('*********');
+        ->setUsername($mailconfig["login"])
+        ->setPassword($mailconfig["password"]);
     $mailer = new Swift_Mailer($transport);
     $message = (new Swift_Message('New order'))
         ->setFrom(['ZolotukhinVM@ya.ru' => 'ZolotukhinVM'])

@@ -1,7 +1,8 @@
 <?php
-require "dbconnect.php";
-require "./admin/functions.php";
 require "./vendor/autoload.php";
+require "./settings.php";
+require "./dbconnect.php";
+require "./admin/functions.php";
 try {
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     if (!$email) {
@@ -17,12 +18,12 @@ try {
 } catch (PDOException $e) {
     $dbConnect->rollback();
     echo "Error: " . $e->getMessage();
-    die();
+    die;
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
-    die();
+    die;
 }
 putFileOrder($userId, getTextOrder($userId, $dbConnect), $dbConnect);
-sendMail($email, getTextOrder($userId, $dbConnect));
+//sendMail($email, "test");
 
 echo "<h1>Your order is submited! Please wait!</h1>";
